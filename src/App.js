@@ -1,4 +1,9 @@
 import { useState } from "react";
+import { NavBar } from "./NavBar";
+import { Logo } from "./Logo";
+import { Search } from "./Search";
+import { NumResults } from "./NumResults";
+import { SortResults } from "./SortResults";
 
 const tempMovieData = [
   {
@@ -7,6 +12,9 @@ const tempMovieData = [
     Year: "2010",
     Poster:
       "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
+    runtime: 148,
+    imdbRating: 8.6,
+    userRating: 10,
   },
   {
     imdbID: "tt0133093",
@@ -14,6 +22,9 @@ const tempMovieData = [
     Year: "1999",
     Poster:
       "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
+    runtime: 148,
+    imdbRating: 8.6,
+    userRating: 10,
   },
   {
     imdbID: "tt6751668",
@@ -21,6 +32,9 @@ const tempMovieData = [
     Year: "2019",
     Poster:
       "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg",
+    runtime: 148,
+    imdbRating: 8.8,
+    userRating: 10,
   },
 ];
 
@@ -85,47 +99,8 @@ export default function App() {
     </>
   );
 }
-
-function NavBar({ children }) {
-  return <nav className="nav-bar">{children}</nav>;
-}
-function Logo() {
-  return (
-    <div className="logo">
-      <span role="img"></span>
-      <h1>name</h1>
-    </div>
-  );
-}
-function Search() {
-  const [query, setQuery] = useState("");
-  return (
-    <input
-      className="search"
-      type="text"
-      placeholder="Search movies..."
-      value={query}
-      onChange={(e) => setQuery(e.target.value)}
-    />
-  );
-}
-function NumResults({ movies }) {
-  return (
-    <p className="num-results">
-      Found <strong>{movies.length}</strong> results
-    </p>
-  );
-}
 function FilterResults({}) {
   //add filter options here
-  return (
-    <select>
-      <option value="rate">Sort by rate</option>
-      <option value="releasDate">Sort by release date</option>
-    </select>
-  );
-}
-function SortResults() {
   return (
     <select>
       <option value="rate">Sort by rate</option>
@@ -201,18 +176,13 @@ function FavoriteSummary({
   );
 }
 function WatchedMoviesSummary({ avgImdbRating, avgUserRating, watched }) {
-  for (let i = 0; i <= watched.length; i++) {
-    let totalRunTime = 0;
-    totalRunTime += watched[i].runtime;
-  }
-  const ttl = totalRunTime;
   return (
     <>
       <h2>Movies you have watched</h2>
       <div>
         <p>
           <span>Total time </span>
-          <span>{totalRunTime}</span>
+          <span></span>
         </p>
         <p>
           <span>{avgImdbRating}</span>
@@ -243,7 +213,11 @@ function Movie({ movie }) {
       <div>
         <p>
           <span>📆</span>
-          <span>Release date: {movie.Year}</span>
+          <span>{movie.Year}</span>
+        </p>
+        <p>
+          <span>🌟</span>
+          <span>{movie.userRating}</span>
         </p>
         <select>
           <option value="favorites">Favorites</option>
