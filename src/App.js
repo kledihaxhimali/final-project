@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { NavBar } from "./NavBar";
-import { Logo } from "./Logo";
-import { Search } from "./Search";
-import { NumResults } from "./NumResults";
-import { SortResults } from "./SortResults";
+import { NavBar } from "./NavBar/NavBar";
+import { Logo } from "./NavBar/Logo";
+import { Search } from "./NavBar/Search";
+import { NumResults } from "./NavBar/NumResults";
+import { SortResults } from "./NavBar/SortResults";
+import { FilterResults } from "./NavBar/FilterResults";
 
 const tempMovieData = [
   {
@@ -97,15 +98,6 @@ export default function App() {
         </Box>
       </MainBody>
     </>
-  );
-}
-function FilterResults({}) {
-  //add filter options here
-  return (
-    <select>
-      <option value="rate">Sort by rate</option>
-      <option value="releasDate">Sort by release date</option>
-    </select>
   );
 }
 function MainBody({ children }) {
