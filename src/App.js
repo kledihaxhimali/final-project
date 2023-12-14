@@ -62,7 +62,7 @@ const tempWatchedData = [
   },
 ];
 const average = (arr) =>
-  arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
+  arr.reduce((acc, cur, arr) => acc + cur / arr.length, 0);
 export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
@@ -73,7 +73,7 @@ export default function App() {
         <Search />
         <NumResults movies={movies} />
         <FilterResults />
-        <SortResults />
+        <SortResults movies={movies} />
       </NavBar>
       <MainBody>
         <Box>
@@ -120,18 +120,14 @@ function BoxBar({ children, watched }) {
   const avgRuntime = average(watched.map((movie) => movie.runtime));
   return <div className="summary">{children}</div>;
 }
-function ResultsSummary({ avgUserRating, movies }) {
+function ResultsSummary({ movies }) {
   return (
     <>
       <h2>Results of Your Search</h2>
       <div>
         <p>
-          <span>{movies.length}</span>
           <span>📽️</span>
-        </p>
-        <p>
-          <span>{avgUserRating}</span>
-          <span>🌟</span>
+          <span>{movies.length}</span>
         </p>
       </div>
     </>
@@ -148,20 +144,20 @@ function FavoriteSummary({
       <h2>Movies added on your list</h2>
       <div>
         <p>
-          <span>{watched.length} </span>
           <span>📽️</span>
+          <span>{watched.length}</span>
         </p>
         <p>
-          <span>{avgImdbRating}</span>
           <span>⭐️</span>
+          <span>{avgImdbRating}</span>
         </p>
         <p>
-          <span>{avgUserRating}</span>
           <span>🌟</span>
+          <span>{avgUserRating}</span>
         </p>
         <p>
-          <span>⌛</span>
           <span>{avgRunTime}</span>
+          <span>⌛</span>
         </p>
       </div>
     </>
@@ -173,16 +169,16 @@ function WatchedMoviesSummary({ avgImdbRating, avgUserRating, watched }) {
       <h2>Movies you have watched</h2>
       <div>
         <p>
-          <span>Total time </span>
           <span></span>
+          <span>Total time </span>
         </p>
         <p>
-          <span>{avgImdbRating}</span>
           <span>⭐️</span>
+          <span>{avgImdbRating}</span>
         </p>
         <p>
-          <span>{avgUserRating}</span>
           <span>🌟</span>
+          <span>{avgUserRating}</span>
         </p>
       </div>
     </>
@@ -211,10 +207,28 @@ function Movie({ movie }) {
           <span>🌟</span>
           <span>{movie.userRating}</span>
         </p>
-        <select>
-          <option value="favorites">Favorites</option>
-          <option value="watched">Watched</option>
-        </select>
+        <div>
+          <select>
+            <option value="favorites">Too Watch </option>
+            <option value="watched">Watched </option>
+          </select>
+          <span role="button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#fff"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </span>
+        </div>
       </div>
     </li>
   );
@@ -245,6 +259,23 @@ function WatchednFavoritesMovies({ movie }) {
         <p>
           <span>⏳</span>
           <span>{movie.runtime} min</span>
+        </p>
+        <p>
+          <span role="button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="darkred"
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="1" y1="12" x2="19" y2="12"></line>
+            </svg>
+          </span>
         </p>
       </div>
     </li>
