@@ -10,7 +10,7 @@ export function SortResults({ movies, onSortChange }) {
     sortedMovies = [...movies].sort((a, b) => Number(b.Year) - Number(a.Year));
   }
   if (sortBy === "rate") {
-    sortedMovies = movies.slice().sort((a, b) => b.imdbRating - a.imdbRating);
+    sortedMovies = [...movies].sort((a, b) => b.imdbRating - a.imdbRating);
   }
   // Call the callback to update the sortedMovies in the parent component
   onSortChange(sortedMovies);

@@ -71,7 +71,19 @@ export default function App() {
   const handleSortChange = (sortedMovies) => {
     setSortedMovies(sortedMovies);
   };
-
+  function handleAddMovies(movie, selectedOption) {
+    // Add the movie to the watched list
+    setWatched((watched) => [...watched, { movie }]);
+    // Remove the movie from the current list based on the selected option
+    if (selectedOption === "favorites") {
+      setSortedMovies((movies) =>
+        movies.filter((m) => m.imdbID !== movie.imdbID)
+      );
+    }
+  }
+  function handleRemoveMovies(imdbID) {
+    setWatched((watched) => watched.filter((movie) => movie.imdbID !== imdbID));
+  }
   return (
     <>
       <NavBar>
@@ -86,7 +98,10 @@ export default function App() {
           <BoxBar watched={watched}>
             <ResultsSummary movies={movies} />
           </BoxBar>
-          <MovieResults sortedMovies={sortedMovies}>
+          <MovieResults
+            sortedMovies={sortedMovies}
+            onAddMovies={handleAddMovies}
+          >
             <Movie />
           </MovieResults>
         </Box>
@@ -94,13 +109,19 @@ export default function App() {
           <BoxBar watched={watched}>
             <FavoriteSummary watched={watched} />
           </BoxBar>
-          <WatchednFavoritesResult watched={watched} />
+          <WatchednFavoritesResult
+            watched={watched}
+            onRemoveMovies={handleRemoveMovies}
+          />
         </Box>
         <Box>
           <BoxBar watched={watched}>
             <WatchedMoviesSummary watched={watched} />
           </BoxBar>
-          <WatchednFavoritesResult watched={watched} />
+          <WatchednFavoritesResult
+            watched={watched}
+            onRemoveMovies={handleRemoveMovies}
+          />
         </Box>
       </MainBody>
     </>
@@ -190,18 +211,26 @@ function WatchedMoviesSummary({ avgImdbRating, avgUserRating, watched }) {
     </>
   );
 }
-function MovieResults({ sortedMovies }) {
+function MovieResults({ sortedMovies, onAddMovies }) {
   return (
     <ul className="list">
       {sortedMovies.map((movie) => (
-        <Movie movie={movie} key={movie.imdbID} />
+        <Movie
+          movie={movie}
+          key={movie.imdbID}
+          onAddMovies={(selectedOption) => onAddMovies(movie, selectedOption)}
+        />
       ))}
     </ul>
   );
 }
-function Movie({ movie }) {
+function Movie({ movie, onAddMovies }) {
+  const [selectedOption, setSelectedOption] = useState("favorites");
+  const handleSelectChange = (e) => {
+    setSelectedOption(e.target.value);
+  };
   return (
-    <li key={movie.imdbID}>
+    <li>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
       <div>
@@ -214,11 +243,11 @@ function Movie({ movie }) {
           <span>{movie.userRating}</span>
         </p>
         <div>
-          <select>
+          <select value={selectedOption} onChange={handleSelectChange}>
             <option value="favorites">Too Watch </option>
             <option value="watched">Watched </option>
           </select>
-          <span role="button">
+          <span role="button" onClick={() => onAddMovies(selectedOption)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -239,16 +268,19 @@ function Movie({ movie }) {
     </li>
   );
 }
-function WatchednFavoritesResult({ watched }) {
+function WatchednFavoritesResult({ watched, onRemoveMovies }) {
   return (
     <ul className="list">
       {watched.map((movie) => (
-        <WatchednFavoritesMovies movie={movie} />
+        <WatchednFavoritesMovies
+          movie={movie}
+          onRemoveMovies={onRemoveMovies}
+        />
       ))}
     </ul>
   );
 }
-function WatchednFavoritesMovies({ movie }) {
+function WatchednFavoritesMovies({ movie, onRemoveMovies }) {
   return (
     <li key={movie.imdbID}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
@@ -267,7 +299,7 @@ function WatchednFavoritesMovies({ movie }) {
           <span>{movie.runtime} min</span>
         </p>
         <p>
-          <span role="button">
+          <span role="button" onClick={() => onRemoveMovies(movie.imdbID)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
