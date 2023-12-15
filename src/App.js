@@ -14,8 +14,8 @@ const tempMovieData = [
     Poster:
       "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
     runtime: 148,
-    imdbRating: 8.6,
-    userRating: 10,
+    imdbRating: 8.7,
+    userRating: 9,
   },
   {
     imdbID: "tt0133093",
@@ -25,7 +25,7 @@ const tempMovieData = [
       "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
     runtime: 148,
     imdbRating: 8.6,
-    userRating: 10,
+    userRating: 6,
   },
   {
     imdbID: "tt6751668",
@@ -66,6 +66,12 @@ const average = (arr) =>
 export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
   const [watched, setWatched] = useState(tempWatchedData);
+
+  const [sortedMovies, setSortedMovies] = useState(movies);
+  const handleSortChange = (sortedMovies) => {
+    setSortedMovies(sortedMovies);
+  };
+
   return (
     <>
       <NavBar>
@@ -73,14 +79,14 @@ export default function App() {
         <Search />
         <NumResults movies={movies} />
         <FilterResults />
-        <SortResults movies={movies} />
+        <SortResults movies={movies} onSortChange={handleSortChange} />
       </NavBar>
       <MainBody>
         <Box>
           <BoxBar watched={watched}>
             <ResultsSummary movies={movies} />
           </BoxBar>
-          <MovieResults movies={movies}>
+          <MovieResults sortedMovies={sortedMovies}>
             <Movie />
           </MovieResults>
         </Box>
@@ -184,10 +190,10 @@ function WatchedMoviesSummary({ avgImdbRating, avgUserRating, watched }) {
     </>
   );
 }
-function MovieResults({ movies }) {
+function MovieResults({ sortedMovies }) {
   return (
     <ul className="list">
-      {movies?.map((movie) => (
+      {sortedMovies.map((movie) => (
         <Movie movie={movie} key={movie.imdbID} />
       ))}
     </ul>
@@ -195,7 +201,7 @@ function MovieResults({ movies }) {
 }
 function Movie({ movie }) {
   return (
-    <li>
+    <li key={movie.imdbID}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
       <div>
